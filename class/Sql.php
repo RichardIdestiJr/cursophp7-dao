@@ -4,7 +4,7 @@ class Sql extends PDO{
 
 	private $conn;
 
-	//Método mágico \/
+	//Método mágico \/ (quando instanciamos uma classe se houver metodo magico, o mesmo é executado automaticamente)
 	public function __construct(){
 		$this -> conn = new PDO("mysql:host=localhost;dbname=php7","root","");
 	}
@@ -13,7 +13,7 @@ class Sql extends PDO{
 	private function setParams($statement,$parameters = array()){
 
 		foreach ($parameters as $key => $value) {
-			$this -> setParam($key,$value);
+			$this -> setParam($statement,$key,$value);
 		}
 	}
 
