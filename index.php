@@ -28,10 +28,17 @@ echo $usuario;
 $aluno = new Usuario("BOLSONARO","2018");
 $aluno -> insert();
 echo $aluno;
-*/
 
+//Alterar um usuario
 $usuario = new Usuario();
 $usuario -> loadById(5);
 $usuario -> update("OBAAAA","HERHHEHE");
+echo $usuario;
+*/
+
+//Deletar um usuario
+$usuario = new Usuario();
+$usuario->loadById(5);
+$usuario->delete();
 echo $usuario;
 ?>
