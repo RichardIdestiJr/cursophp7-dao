@@ -1,33 +1,33 @@
 <?php
 
 class Usuario{
-	private $iduser;
-	private $deslogin;
-	private $dessenha;
+	private $id;
+	private $login;
+	private $senha;
 	private $dtcadastro;
 
-	public function getIduser(){
-		return $this -> iduser;
+	public function getId(){
+		return $this -> id;
 	}
 
-	public function setIduser($value){
-		$this -> iduser = $value;
+	public function setId($value){
+		$this -> id = $value;
 	}
 
-	public function getDeslogin(){
-		return $this -> deslogin;
+	public function getLogin(){
+		return $this -> login;
 	}
 
-	public function setDeslogin($value){
-		$this -> deslogin = $value;
+	public function setLogin($value){
+		$this -> login = $value;
 	}
 
-	public function getDessenha(){
-		return $this -> dessenha;
+	public function getSenha(){
+		return $this -> senha;
 	}
 
-	public function setDessenha($value){
-		$this -> dessenha = $value;
+	public function setSenha($value){
+		$this -> senha = $value;
 	}
 
 	public function getDtcadastro(){
@@ -41,7 +41,7 @@ class Usuario{
 	public function loadById($id){
 		
 		$sql = new Sql();
-		$result = $sql -> select("SELECT * FROM tb_usuarios WHERE id_user = :ID", array(
+		$result = $sql -> select("SELECT * FROM users WHERE id = :ID", array(
 			":ID"=>$id
 		));
 		
@@ -49,27 +49,58 @@ class Usuario{
 
 			$row = $result[0];
 			
-			$this -> setIduser($row['id_user']);
-			$this -> setDeslogin($row['deslogin']);
-			$this -> setDessenha($row['dessenha']);
+			$this -> setId($row['id']);
+			$this -> setLogin($row['login']);
+			$this -> setSenha($row['senha']);
 			$this -> setDtcadastro(new DateTime($row['dtcadastro']));
 		}
 
 	}
 
+	//Método static não precisa ser instanciado
+	public static function getList(){
+
+		$sql = new Sql();
+		return $sql -> select("SELECT * FROM users ORDER BY login");
+	}
+
+	public static function search($login){
+		$sql = new Sql();
+		return $sql -> select("SELECT * FROM users WHERE login LIKE :SEARCH ORDER BY login", array(
+			':SEARCH'=>"%".$login."%"
+		));
+	}
+
+	public function login($login,$password){
+		$sql = new Sql();
+		$result = $sql -> select("SELECT * FROM users WHERE login = :LOGIN AND senha = :PASSWORD", array(
+			":LOGIN"=>$login,
+			":PASSWORD"=>$password
+		));
+		
+		if(count($result) > 0){
+
+			$row = $result[0];
+			
+			$this -> setId($row['id']);
+			$this -> setLogin($row['login']);
+			$this -> setSenha($row['senha']);
+			$this -> setDtcadastro(new DateTime($row['dtcadastro']));
+		}else{
+			throw new Exception("Login e/ou senha inválidos!");
+		}
+	}
+
 	public function __toString(){
 
 		return json_encode(array(
-			"iduser" => $this -> getIduser(),
-			"deslogin" => $this -> getDeslogin(),
-			"dessenha" => $this -> getDessenha(),
+			"iduser" => $this -> getId(),
+			"deslogin" => $this -> getLogin(),
+			"dessenha" => $this -> getSenha(),
 			"dtcadastro" => $this -> getDtcadastro()->format("d/m/Y H:i:s")
 		));
 	}
 
-	public function cadastrar($deslogin,$dessenha):array{
-
-	}
 
 }
 
